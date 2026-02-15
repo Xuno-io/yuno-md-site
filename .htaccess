@@ -1,0 +1,10 @@
+AddType text/plain .md
+
+# No cache for .md files so skill updates always arrive
+<FilesMatch "\.md$">
+  Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+
+# skill.md as clean alias
+RewriteEngine On
+RewriteRule ^skill\.md$ SKILL.md [L]

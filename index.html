@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YunoAI — Intellectual sparring partner for your code</title>
+  <meta name="description" content="An Agent Skill that transforms your coding agent into a sparring partner that grounds its criticism in your actual repository.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="YunoAI — Intellectual sparring partner for your code">
+  <meta property="og:description" content="Your coding agent reads your code and challenges your decisions before the commit. Ground criticism in code, not opinion.">
+  <meta property="og:url" content="https://yuno.md">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="YunoAI — Sparring partner for your code">
+  <meta name="twitter:description" content="An Agent Skill that turns your coding agent into a sparring partner that critiques with evidence from your repository.">
+
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <a href="/" class="logo">yuno.md</a>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <p class="hero-label">Agent Skill</p>
+      <h1>Code review that reads your repo<span class="accent">.</span></h1>
+      <p>Yuno turns your coding agent into a sparring partner — it greps your code, finds what you missed, and challenges you with line numbers.</p>
+      <div class="install-block">
+        <p class="install-label">Paste this into Claude Code, Cursor, or any coding agent:</p>
+        <div class="install">
+          <code id="install-cmd">Read https://yuno.md/SKILL.md and follow the instructions</code>
+          <button onclick="copyCmd()">Copy</button>
+        </div>
+        <p class="install-hint">Your agent reads the skill, installs it, and activates it automatically.</p>
+      </div>
+    </section>
+
+    <!-- Demo -->
+    <section class="demo">
+      <h2>The difference</h2>
+
+      <div class="demo-prompt">
+        <span>&gt;</span> "Review the path validation in primitives.rs"
+      </div>
+
+      <div class="demo-code">
+        <pre><span class="comment">// primitives.rs</span>
+fn is_within_allowed(path: &amp;str, allowed: &amp;[String]) -&gt; bool {
+    <span class="line-highlight">let canonical = fs::canonicalize(path).unwrap();</span>  <span class="comment">// line 47</span>
+    allowed.iter().any(|dir| {
+        let allowed_canonical = fs::canonicalize(dir).unwrap();
+        canonical.starts_with(allowed_canonical)
+    })
+}</pre>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-card without">
+          <div class="label">Your agent</div>
+          <div class="agent-response">
+            "Looks good. The function correctly checks if a path is within the allowed directories by canonicalizing both paths and comparing them. Implementation looks solid."
+          </div>
+        </div>
+        <div class="demo-card with">
+          <div class="label">Your agent with Yuno</div>
+          <div class="agent-response">
+            "<span class="code-ref">is_within_allowed</span> re-canonicalizes every path on each call — <span class="code-ref">line 47</span>. That's O(n) syscalls per validation and will silently resolve symlinks, which means a path outside your allowed dirs could pass if there's a symlink inside them. Cache the canonical allowed paths at init, and decide if you want to follow symlinks or not — those are two different security models."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Yuno -->
+    <section class="what">
+      <h2>Why Yuno instead of your own prompt?</h2>
+      <p>Because Yuno doesn't just critique — it reads your code first. Any prompt can say "question my assumptions." Yuno greps your repo, finds the actual complexity you didn't mention, and throws it back at you with line numbers.</p>
+      <p>Compatible with:</p>
+      <div class="agents">
+        <span>Claude Code</span>
+        <span>Cursor</span>
+        <span>Roo Code</span>
+        <span>Amp</span>
+        <span>VS Code</span>
+        <span>Gemini CLI</span>
+        <span>OpenAI Codex</span>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="links">
+        <a href="https://github.com/Xuno-io/yuno-md-site">GitHub</a>
+        <a href="https://t.me/yunoaidotcom">Telegram</a>
+        <a href="https://agentskills.io">Agent Skills</a>
+      </div>
+      <p>Made by <a href="https://github.com/Xuno-io">Xuno</a> &middot; MIT License</p>
+    </footer>
+
+  </div>
+
+  <script>
+    function copyCmd() {
+      var cmd = 'Read https://yuno.md/SKILL.md and follow the instructions';
+      var btn = document.querySelector('.install button');
+      var code = document.getElementById('install-cmd');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(cmd).then(function() {
+          btn.textContent = 'Copied';
+          setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+        }).catch(function() {
+          fallbackSelect(code, btn);
+        });
+      } else {
+        fallbackSelect(code, btn);
+      }
+    }
+
+    function fallbackSelect(code, btn) {
+      var range = document.createRange();
+      range.selectNodeContents(code);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      btn.textContent = 'Selected';
+      setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+    }
+  </script>
+</body>
+</html>
