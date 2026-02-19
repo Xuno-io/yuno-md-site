@@ -36,7 +36,7 @@
       <div class="install-block">
         <p class="install-label">Paste this into Claude Code, Cursor, or any coding agent:</p>
         <div class="install">
-          <code id="install-cmd">Read https://yuno.md/SKILL.md and follow the instructions</code>
+          <code id="install-cmd">Read https://yuno.md/SKILL.md and install the skill</code>
           <button onclick="copyCmd()">Copy</button>
         </div>
         <p class="install-hint">Your agent reads the skill, installs it, and activates it automatically.</p>
@@ -108,7 +108,7 @@ fn is_within_allowed(path: &amp;str, allowed: &amp;[String]) -&gt; bool {
 
   <script>
     function copyCmd() {
-      var cmd = 'Read https://yuno.md/SKILL.md and follow the instructions';
+      var cmd = 'Read https://yuno.md/SKILL.md and install the skill';
       var btn = document.querySelector('.install button');
       var code = document.getElementById('install-cmd');
       if (navigator.clipboard && navigator.clipboard.writeText) {
